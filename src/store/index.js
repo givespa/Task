@@ -2,25 +2,36 @@ import { createStore } from 'vuex'
 
 export default createStore({
   state: {
-    task: [
-      { id: 1, name: 'Nada que hacer' }
+    tasks: [
+      { id: 1, name: 'Nada que hacer', statu: true }
     ]
   },
   mutations: {
+    changeTaskToState: (state, payload) => {
+      state.tasks[payload - 1].statu = !state.tasks[payload - 1].statu
+      console.log(state.tasks[payload - 1].statu)
+    },
     addTaskToState: (state, payload) => {
-      var id = state.task[state.task.length - 1].id
-      var name = payload
-      state.task.push({ id: ++id, name: name })
+      if (state.tasks.length) {
+        var num = state.tasks[state.tasks.length - 1].id
+        state.tasks.push({ id: ++num, name: payload, statu: false })
+      } else {
+        state.tasks.push({ id: 1, name: payload, statu: false })
+      }
     },
     delTaskToState: (state, payload) => {
-      // var id = state.lists[state.lists.length - 1].id
-      // var name = payload
-      // state.lists.push({ id: ++id, name: name })
+      state.tasks.splice(--payload, 1)
     }
   },
   actions: {
-    addTask: (state, payload) => {
-
+    addTask: (store, payload) => {
+      store.commit('addTaskToState', payload)
+    },
+    delTask: (store, payload) => {
+      store.commit('delTaskToState', payload)
+    },
+    changeTask: (store, payload) => {
+      store.commit('changeTaskToState', payload)
     }
   },
   modules: {

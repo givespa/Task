@@ -4,19 +4,21 @@
     @mouseover="hoverOver"
     @mouseout="hoverOut"
     :style="{ backgroundColor: variant }">
-        <label :class="{ incorrecto: actived }" @click="click">{{name + ' id: ' + id}}</label>
-        <button :class="{btn_correct: !actived, btn_ok: actived}" :disabled="!actived" >✔</button>
+        <label :class="{ incorrecto: this.$store.state.tasks[this.id - 1].statu }" @click="changeTask(id)">{{name}}</label>
+        <button :class="{btn_correct: !this.$store.state.tasks[this.id - 1].statu, btn_ok: this.$store.state.tasks[this.id - 1].statu}" :disabled="!this.$store.state.tasks[this.id - 1].statu" @click="delTask(id)">✔</button>
     </dir>
 </template>
 
 <script>
-
+import { mapActions, mapState } from 'vuex'
 export default {
   data () {
     return {
-      variant: 'white',
-      actived: false
+      variant: 'white'
     }
+  },
+  computed: {
+    ...mapState(['tasks'])
   },
   props: {
     name: {
@@ -34,9 +36,7 @@ export default {
     hoverOut () {
       this.variant = 'white'
     },
-    click () {
-      this.actived = !this.actived
-    }
+    ...mapActions(['delTask', 'changeTask'])
   }
 }
 </script>
